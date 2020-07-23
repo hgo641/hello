@@ -1,0 +1,61 @@
+.MODEL   SMALL
+.STACK   100H
+.DATA
+VarA   DW   ?
+VarB   DW   ?
+.CODE
+MAIN   PROC
+      MOV   AX,@DATA
+   MOV   DS,AX
+      MOV   AH,2
+        MOV   DL,'?'
+         INT   21H
+
+   CALL   INDECM
+   MOV   VarA,AX
+   CALL   INDECM
+   MOV   VarB,AX   
+   MOV   AX,VarA  ;a값 절대값만들기
+   CMP   AX,0
+   JGE   @NEXT
+   NEG   AX
+
+@NEXT:
+   IMUL   VarB  ;|a|*b
+   MOV   BX,AX  ;BX=|a|*b
+
+   MOV   AX,3
+   IMUL   VarB  ;AX=b*3
+   SUB   BX,AX
+   MOV   AX,VarA
+   IMUL   VarA
+   SUB   BX,AX
+
+   MOV   AH,2
+   MOV   DL,0DH
+   INT   21H
+   MOV   DL,0AH
+   INT    21H
+   MOV   AX,BX
+   CALL   OUTDECM
+   MOV   AH,4CH
+   INT   21H
+MAIN   ENDP
+
+INCLUDE   INDECM.ASM
+INCLUDE   OUTDECM.ASM
+   END   MAIN
+   
+
+
+@NEXT:
+   IMUL
+
+
+   MOV   AH,4CH
+   INT   21H
+   MAIN   ENDP
+
+INCLUDE   INDECM.ASM
+INCLUDE   OUTDECM.ASM
+END MAIN
